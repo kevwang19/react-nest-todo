@@ -13,6 +13,7 @@ export class TodosService {
   ) {}
 
   create(createTodoDto: CreateTodoDto): Promise<Todo> {
+    console.log('[TodosService] create', createTodoDto);
     const todo = this.todosRepo.create({
       title: createTodoDto.title,
       status: createTodoDto.status ?? 'pending',
@@ -21,12 +22,14 @@ export class TodosService {
   }
 
   findAll(): Promise<Todo[]> {
+    console.log('[TodosService] findAll');
     return this.todosRepo.find({
       order: { created_at: 'DESC' },
     });
   }
 
   async findOne(id: number): Promise<Todo> {
+    console.log('[TodosService] findOne', { id });
     const todo = await this.todosRepo.findOneBy({ id });
     if (!todo) {
       throw new NotFoundException(`Todo #${id} not found`);
@@ -35,12 +38,14 @@ export class TodosService {
   }
 
   async update(id: number, updateTodoDto: UpdateTodoDto): Promise<Todo> {
+    console.log('[TodosService] update', { id, updateTodoDto });
     const todo = await this.findOne(id);
     Object.assign(todo, updateTodoDto);
     return this.todosRepo.save(todo);
   }
 
   async remove(id: number): Promise<void> {
+    console.log('[TodosService] remove', { id });
     const result = await this.todosRepo.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException(`Todo #${id} not found`);
