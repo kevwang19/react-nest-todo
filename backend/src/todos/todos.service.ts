@@ -12,18 +12,18 @@ export class TodosService {
     private readonly todosRepo: Repository<Todo>,
   ) {}
 
-  create(createTodoDto: CreateTodoDto): Promise<Todo> {
+  async create(createTodoDto: CreateTodoDto): Promise<Todo> {
     console.log('[TodosService] create', createTodoDto);
     const todo = this.todosRepo.create({
       title: createTodoDto.title,
       status: createTodoDto.status ?? 'pending',
     });
-    return this.todosRepo.save(todo);
+    return await this.todosRepo.save(todo);
   }
 
-  findAll(): Promise<Todo[]> {
+  async findAll(): Promise<Todo[]> {
     console.log('[TodosService] findAll');
-    return this.todosRepo.find({
+    return await this.todosRepo.find({
       order: { created_at: 'DESC' },
     });
   }
@@ -41,7 +41,7 @@ export class TodosService {
     console.log('[TodosService] update', { id, updateTodoDto });
     const todo = await this.findOne(id);
     Object.assign(todo, updateTodoDto);
-    return this.todosRepo.save(todo);
+    return await this.todosRepo.save(todo);
   }
 
   async remove(id: number): Promise<void> {
